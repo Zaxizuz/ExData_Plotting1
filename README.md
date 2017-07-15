@@ -1,4 +1,4 @@
-## Introduction
+# Introduction
 
 This assignment uses data from
 the <a href="http://archive.ics.uci.edu/ml/">UC Irvine Machine
@@ -33,64 +33,69 @@ web site</a>:
 <li><b>Sub_metering_3</b>: energy sub-metering No. 3 (in watt-hour of active energy). It corresponds to an electric water-heater and an air-conditioner.</li>
 </ol>
 
+#How the code works 
+
 ## Loading the data
 
+'''
+#Download data and and unzip.
 
+if (!file.exists("exdata%2Fdata%2Fhousehold_power_consumption.zip")){
+        fileURL <- "https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip"
+        download.file(fileURL,"exdata%2Fdata%2Fhousehold_power_consumption",method="curl")
+        unzip("exdata%2Fdata%2Fhousehold_power_consumption.zip")
+} 
+'''
+'''
+## Loading data from txt
 
+consumption <- read.table("household_power_consumption.txt",header=TRUE,sep=";",na.strings ="?" )
+consumption$Date <-as.Date(consumption$Date, " %d / %m / %Y")
+consumption <-subset(consumption,Date=="2007-02-01"|Date=="2007-02-02")
+'''
 
+## creating Plot1
+'''
+hist(as.numeric(consumption$Global_active_power),col="red",main="Global Active Power",xlab="Global Active Power(kilowatts)")
+dev.copy(png, file = "plot1.png",width=480, height=480)
+dev.off()
+'''
 
-When loading the dataset into R, please consider the following:
+## creating Plot 2
 
-* The dataset has 2,075,259 rows and 9 columns. First
-calculate a rough estimate of how much memory the dataset will require
-in memory before reading into R. Make sure your computer has enough
-memory (most modern computers should be fine).
+'''
+timing <-as.POSIXct(paste(consumption$Date, consumption$Time), format="%Y-%m-%d %H:%M:%S")
+plot(timing,consumption$Global_active_power,type="l",ylab="Global Active Power(kilowatts)",xlab="")
+dev.copy(png, file = "plot2.png",width=480, height=480)
+dev.off()
+'''
 
-* We will only be using data from the dates 2007-02-01 and
-2007-02-02. One alternative is to read the data from just those dates
-rather than reading in the entire dataset and subsetting to those
-dates.
+## creating Plot 3
 
-* You may find it useful to convert the Date and Time variables to
-Date/Time classes in R using the `strptime()` and `as.Date()`
-functions.
+'''
+plot(timing,consumption$Sub_metering_1,type="l",xlab="",col="black",ylab="Energy sub metering")
+lines(timing,consumption$Sub_metering_2,type="l",col="red")
+lines(timing,consumption$Sub_metering_3,type="l",col="blue")
+legend("topright",pch=NA,col = c("black","red", "blue"), legend = c("Sub_metering_1", "Sub_metering_2","Sub_metering_3"),lwd=2)
+dev.copy(png, file = "plot3.png",width=480, height=480)
+dev.off()
+'''
 
-* Note that in this dataset missing values are coded as `?`.
+## creating Plot 4
 
-
-## Making Plots
-
-Our overall goal here is simply to examine how household energy usage
-varies over a 2-day period in February, 2007. Your task is to
-reconstruct the following plots below, all of which were constructed
-using the base plotting system.
-
-First you will need to fork and clone the following GitHub repository:
-[https://github.com/rdpeng/ExData_Plotting1](https://github.com/rdpeng/ExData_Plotting1)
-
-
-For each plot you should
-
-* Construct the plot and save it to a PNG file with a width of 480
-pixels and a height of 480 pixels.
-
-* Name each of the plot files as `plot1.png`, `plot2.png`, etc.
-
-* Create a separate R code file (`plot1.R`, `plot2.R`, etc.) that
-constructs the corresponding plot, i.e. code in `plot1.R` constructs
-the `plot1.png` plot. Your code file **should include code for reading
-the data** so that the plot can be fully reproduced. You should also
-include the code that creates the PNG file.
-
-* Add the PNG file and R code file to your git repository
-
-When you are finished with the assignment, push your git repository to
-GitHub so that the GitHub version of your repository is up to
-date. There should be four PNG files and four R code files.
-
-
-The four plots that you will need to construct are shown below. 
-
+'''
+par(mfrow = c(2, 2), mar = c(4, 4, 2, 1), oma = c(0, 0, 2, 0))
+timing <-as.POSIXct(paste(consumption$Date, consumption$Time), format="%Y-%m-%d %H:%M:%S")
+plot(timing,consumption$Global_active_power,type="l",xlab="",ylab="Global Active Power")
+plot(timing,consumption$Voltage,type="l",xlab="datetime",ylab="Voltage")
+plot(timing,consumption$Sub_metering_1,type="l",xlab="",col="black",ylab="Energy sub metering")
+lines(timing,consumption$Sub_metering_2,type="l",col="red")
+lines(timing,consumption$Sub_metering_3,type="l",col="blue")
+legend("topright",pch=NA,col = c("black","red", "blue"), legend = c("Sub_metering_1", "Sub_metering_2","Sub_metering_3"),lwd=2,cex=0.5)
+plot(timing,consumption$Global_reactive_power,type="l",xlab="datetime",ylab="Global Reactive Power")
+dev.copy(png, file = "plot4.png",width=480, height=480)
+dev.off()
+'''
 
 ### Plot 1
 

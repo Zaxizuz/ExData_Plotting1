@@ -35,10 +35,7 @@ web site</a>:
 
 # How the code works 
 
-## Loading the data
-
-
-#Download data and and unzip.
+# Download data and and unzip.
 
 ```{}
 if (!file.exists("exdata%2Fdata%2Fhousehold_power_consumption.zip")){
